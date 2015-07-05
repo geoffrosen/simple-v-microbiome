@@ -91,7 +91,7 @@ parser$add_argument("-i", "--input-files", help="Input files to use to make heat
 parser$add_argument("-o", "--output-folder", help="Output folder to place heatmaps in", required=TRUE)
 parser$add_argument("-c", "--column-name", help="Column to use for class", required=TRUE)
 parser$add_argument("-x", "--xlab", help="X label", required=TRUE)
-parser$add_argument("-m", "--minimum-abundances", help="Minimum abundances as fraction. (comma separated)", required=TRUE)
+parser$add_argument("-m", "--minimum-abundances", help="Minimum abundances as proportion. (comma separated)", required=TRUE)
 
 my.args <- parser$parse_args()
 
