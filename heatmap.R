@@ -38,7 +38,7 @@ get.file.and.output.heatmap <- function(input_file, output_folder, column_name, 
 	label.variable <- replace(label.variable, which(label.variable == lev), colorSet[i])
   }
   # Thanks: http://r.789695.n4.nabble.com/Extracting-File-Basename-without-Extension-td878817.html
-  base.filename <- paste(output_folder,"/",sub("^([^.]*).*", "\\1", input_file),"_",column_name,sep="")
+  base.filename <- paste(output_folder,"/",basename(sub("^([^.]*).*", "\\1", input_file)),"_",column_name,sep="")
   
   for (i in 1:length(minimum_abundances)) {
     lev <- minimum_abundances[i]
