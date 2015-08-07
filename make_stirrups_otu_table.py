@@ -1,9 +1,32 @@
 #!/usr/bin/env python
 
+__version__ = "0.1.0"
+__status__ = "Development"
+__email__ = "http://geoffrosen.com/contact.html"
+__maintainer__ = "Geoff Rosen"
+__author__ = "Geoff Rosen"
+
+__doc__ = ''' make_stirrups_otu_table.py: Take an assignment file from stirrups and make an otu table and a representative set
+
+ This script will take an otu table (-i) and your original
+ reference database (-r) and taxon heirarchy (-t) file.
+ You can set the minimum identity score required (-m).
+ It will then output an otu table to a specified
+ location (-o) and the representative set to 
+ a separately specified location (-s)
+ 
+ For help, contact %s (%s)
+ 
+ Output:
+ - otu table
+ - representative set (so you can make a tree)
+
+''' % (__maintainer__, __email__)
+
 import argparse, os, csv, sys
 
 def main():
-	parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+	parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description=__doc__)
 	parser.add_argument('-a',help='stirrups assignment file', required=True)
 	parser.add_argument('-r',help='stirrups reference fasta file', required=True)
 	parser.add_argument('-t',help='stirrups reference taxon heirarchy', required=True)

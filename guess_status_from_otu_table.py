@@ -1,9 +1,33 @@
 #!/usr/bin/env python
 
+__version__ = "0.1.0"
+__status__ = "Development"
+__email__ = "http://geoffrosen.com/contact.html"
+__maintainer__ = "Geoff Rosen"
+__author__ = "Geoff Rosen"
+
+__doc__ = ''' guess_status_from_otu_table.py: Guess whether an organism is present based on its presence in an otu table
+
+ This script will take an otu table (-i) and a mapping file (-m)
+ it will use the information from the mapping file on 
+ the otu to look at (-n) and will either judge it to be
+ "pos" if present or "neg" if absent.
+ It will then append that to the mapping file.
+ It can also test for specificity and sensitivity
+ if given a gold standard column (-c) and a positive value
+ in the gold standard (-p) [example: "positive"]
+ 
+ For help, contact %s (%s)
+ 
+ Output:
+ - mapping file with guessed status
+
+''' % (__maintainer__, __email__)
+
 import argparse, csv
 
 def main():
-	parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+	parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description=__doc__)
 	parser.add_argument('-i',help='tsv formatted otu table', required=True)
 	parser.add_argument('-m',help='current mapping file path', required=True)
 	parser.add_argument('-o',help='output filepath',required=True)

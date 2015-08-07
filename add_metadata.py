@@ -1,5 +1,10 @@
 #!/usr/bin/env python
 
+__author__ = "Geoff Rosen"
+__maintainer__ = "Geoff Rosen"
+__email__ = "http://geoffrosen.com/contact.html"
+__version__ = "0.1.0"
+
 __doc__ = ''' add_metadata.py: This will add metadata to a tsv file
 
 It will match the element in the top row of the tsv file
@@ -12,7 +17,7 @@ allowed (-a). It will list for you the excluded samples (-w).
 It can read from the stdin or use a specified filepath (-i).
 It can output to stdout or use a specified filepath (-o).
 
-Please direct questions to %s
+Please direct questions to %s (%s)
 
 Sample:
 
@@ -73,12 +78,7 @@ This will be the output:
 Meta_1       1
 Meta_2       2
 Bact_1       5
-''' % 'geoff.rosen@gmail.com'
-
-__author__ = "Geoff Rosen"
-__maintainer__ = "Geoff Rosen"
-__email__ = "geoff.rosen@gmail.com"
-__version__ = "0.1.0"
+''' % (__maintainer__, __email__)
 
 import argparse, csv, sys
 

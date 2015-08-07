@@ -1,20 +1,32 @@
 #!/usr/bin/env python
 
-'''
+__version__ = "0.1.0"
+__status__ = "Development"
+__email__ = "http://geoffrosen.com/contact.html"
+__maintainer__ = "Geoff Rosen"
+__author__ = "Geoff Rosen"
+
+__doc__ = ''' get_barcodes_from_extracted_barcodes.py: Get barcodes from the ouput of extract_barcodes.py
+
  This script will take a barcodes.fastq file from extract_barcodes.py
  It will then determine the most likely barcode for each sequence
  It will output a new mapping file with the barcodes added
+ 
+ For help, contact %s (%s)
 
  Inputs:
  - barcodes.fastq
  - mapping file
+ 
+ Output:
+ - mapping file with appended barcodes and stats
    
-'''
+''' % (__maintainer__, __email__)
 
 import argparse, csv, sys
 
 def main():
-	parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+	parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description=__doc__)
 	parser.add_argument('-i','--input-fp',help='barcodes.fastq file', type=str, required=True)
 	parser.add_argument('-o','--output-fp',help='Location for new mapping file to be written to', type=str, required=True)
 	parser.add_argument('-s','--separator',help='Character/string that marks separation of sample id and sequence', type=str, default=".")

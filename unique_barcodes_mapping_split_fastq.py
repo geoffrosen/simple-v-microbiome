@@ -1,20 +1,35 @@
 #!/usr/bin/env python
 
-'''
- This script will take a fastq file and a mapping file
+__version__ = "0.1.0"
+__status__ = "Development"
+__email__ = "http://geoffrosen.com/contact.html"
+__maintainer__ = "Geoff Rosen"
+__author__ = "Geoff Rosen"
+
+__doc__ = ''' unique_barcodes_mapping_split_fastq.py: Split a fastq file into fastq files with unique barcodes to be able to use qiime
+
+ This script will take a fastq file (-i) and a mapping file (-m)
  It will split the mapping file into unique mapping files
  It will split the fastq files to match the mapping files
+ It will create automatically file names and place all
+ files in the specified location (-o)
+ 
+ For help, contact %s (%s)
  
  Inputs:
  - fastq file
  - mapping file
+ 
+ Outputs:
+ - unique barcode fastq files
+ - unique barcode mapping files
    
-'''
+''' % (__maintainer__, __email__)
 
 import argparse, csv, os
 
 def main():
-	parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+	parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description=__doc__)
 	parser.add_argument('-i','--input-fastq',help='fastq file', type=str, required=True)
 	parser.add_argument('-o','--output-folder',help='Location for information to be written to', type=str, required=True)
 	parser.add_argument('-s','--separator',help='Character/string that marks separation of sample name from sequence name', type=str, default=".")
