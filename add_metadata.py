@@ -120,7 +120,7 @@ def main():
 		output_file = sys.stdout
 	else:
 		output_file = open(args.o, 'wb')
-		opened_files.apend(output_file)
+		opened_files.append(output_file)
 	r = csv.reader(input_file, delimiter='\t')
 	w = csv.writer(output_file, delimiter='\t')
 	top = r.next()
@@ -143,13 +143,13 @@ def main():
 				if args.a and args.a[nheader[i]] != [''] and mapper[top[m]][nheader[i]] not in args.a[nheader[i]]:
 					lineholder[i].append('NA')
 					errs.add(m)
-					errs_samples.add(mapper[top[m]][header[0]])
+					errs_samples.add(top[m])
 				else:
 					lineholder[i].append(mapper[top[m]][nheader[i]])
 			except:
 				lineholder[i].append('NA')
 				errs.add(m)
-				errs_samples.add(mapper[top[m]][header[0]])
+				errs_samples.add(top[m])
 	if args.r:
 		w.writerow(get_rid_of_cols(top, errs))
 		for item in lineholder:
