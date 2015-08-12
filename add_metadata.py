@@ -3,7 +3,7 @@
 __author__ = "Geoff Rosen"
 __maintainer__ = "Geoff Rosen"
 __email__ = "http://geoffrosen.com/contact.html"
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 __doc__ = ''' add_metadata.py: This will add metadata to a tsv file
 
@@ -16,6 +16,12 @@ the output (-c), and what values of those columns should be
 allowed (-a). It will list for you the excluded samples (-w).
 It can read from the stdin or use a specified filepath (-i).
 It can output to stdout or use a specified filepath (-o).
+There is the option to normalize (-n) the data. This is done
+by summing over the columns and then dividing each value by
+the column sum. Note that this will not be accurate normalization
+if your data contains multiple counts of the same read. For
+example, if you count a read both as genus_Streptococcus
+and genus_Streptococcus;species_Streptococcus_agalactiae.
 
 Please direct questions to %s (%s)
 
@@ -40,6 +46,16 @@ This will be the output:
 Meta_1       1          2        NA
 Meta_2       2          1        NA
 Bact_1       5          6        8
+
+If you run: 
+python add_metadata.py -i otu_table.tsv -m mapping_file.tsv
+	-o output.tsv -n
+
+This will be the output (not a great example):
+#OTU ID    Sample_1  Sample_2  Sample_3
+Meta_1       1          2        NA
+Meta_2       2          1        NA
+Bact_1       1          1        1
 
 If you run:
 python add_metadata.py -i otu_table.tsv -m mapping_file.tsv
@@ -91,6 +107,7 @@ def main():
 	parser.add_argument('-c', help='categories to add (if not whole set, comma separated)', default=False)
 	parser.add_argument('-a', help='allowed values in categories. (semi-colon separated between variables, comma separate between values)', default=False)
 	parser.add_argument('-w', help='write error(s)/removed sample(s) to stderr', action='store_true', default=False)
+	parser.add_argument('-n', help='normalize by column sum', action='store_true', default=False)
 	args = parser.parse_args()
 	opened_files = []
 	if args.c:
@@ -107,7 +124,7 @@ def main():
 		args.c = set(args.c)
 	with open(args.m, 'rU') as mapping_file:
 		r = csv.reader(mapping_file, delimiter='\t')
-		header = r.next()[1:]
+		header = filter(None, r.next()[1:])
 		mapper = {row[0]: {header[i]: row[i + 1] for i in range(len(header))} for row in r}
 	if not sys.stdin.isatty():
 		if args.i != None:
@@ -123,7 +140,7 @@ def main():
 		opened_files.append(output_file)
 	r = csv.reader(input_file, delimiter='\t')
 	w = csv.writer(output_file, delimiter='\t')
-	top = r.next()
+	top = filter(None, r.next())
 	lineholder = []
 	nheader = []
 	for item in header:
@@ -150,18 +167,23 @@ def main():
 				lineholder[i].append('NA')
 				errs.add(m)
 				errs_samples.add(top[m])
+	if args.n:
+		r = [row for row in r]
+		colsums = calculate_colsums(r)
+	else:
+		colsums = False
 	if args.r:
 		w.writerow(get_rid_of_cols(top, errs))
 		for item in lineholder:
 			w.writerow(get_rid_of_cols(item, errs))
 		for remrow in r:
-			w.writerow(get_rid_of_cols(remrow, errs))
+			w.writerow(normalize_row_switcher(get_rid_of_cols(remrow, errs), colsums, args.n))
 	else:
 		w.writerow(top)
 		for item in lineholder:
 			w.writerow(item)
 		for remrow in r:
-			w.writerow(remrow)
+			w.writerow(normalize_row_switcher(remrow, colsums, args.n))
 	for f in opened_files:
 		f.close()
 	if args.w:
@@ -178,6 +200,26 @@ def get_rid_of_cols(row, bad_cols):
 		if i not in bad_cols:
 			keep.append(row[i])
 	return keep
-	
+
+def normalize_row_switcher(row, colsums, normalize=False):
+	if normalize:
+		return [row[0]] + [float(row[i])/colsums[i] for i in range(1,len(colsums))]
+	else:
+		return filter(None, row)
+
+def calculate_colsums(rows):
+	rows = remove_blanks(rows)
+	colsums = ['samp_name'] + rows[0][1:]
+	for row in rows[1:]:
+		for i in range(1,len(row)):
+			try:
+				colsums[i] = float(colsums[i]) + float(row[i])
+			except:
+				sys.exit(colsums)
+	return colsums
+
+def remove_blanks(rows):
+	return [filter(None, row) for row in rows]
+
 if __name__ == '__main__':
 	main()
