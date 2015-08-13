@@ -177,7 +177,7 @@ def main():
 		for item in lineholder:
 			w.writerow(get_rid_of_cols(item, errs))
 		for remrow in r:
-			w.writerow(normalize_row_switcher(get_rid_of_cols(remrow, errs), colsums, args.n))
+			w.writerow(get_rid_of_cols(normalize_row_switcher(remrow, colsums, args.n), errs))
 	else:
 		w.writerow(top)
 		for item in lineholder:
